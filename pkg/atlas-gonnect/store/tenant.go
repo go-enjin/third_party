@@ -6,7 +6,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/go-enjin/pkg/log"
+	"github.com/go-enjin/be/pkg/log"
 )
 
 type Tenant struct {
