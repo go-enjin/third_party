@@ -17,25 +17,30 @@
 #: uncomment to echo instead of execute
 #CMD=echo
 
-.PHONY: all help local unlocal tidy build
-
 BE_PATH ?= ../../../be
+
+ENJENV_BIN ?= $(shell which enjenv)
+
+.PHONY: all help local unlocal tidy build
 
 help:
 	@echo "usage: make <help|local|unlocal|tidy>"
 
+build:
+	@go build -v
+
 local:
 	@if [ -d "${BE_PATH}" ]; then \
-		enjenv go-local ${BE_PATH}; \
+		${CMD} ${ENJENV_BIN} go-local ${BE_PATH}; \
 	else \
 		echo "BE_PATH not set or not a directory: \"${BE_PATH}\""; \
 	fi
 
 unlocal:
-	@enjenv go-unlocal
+	@${CMD} ${ENJENV_BIN} go-unlocal
 
 tidy:
-	@go mod tidy -go=1.16 && go mod tidy -go=1.17
+	@${CMD} go mod tidy -go=1.16 && go mod tidy -go=1.17
 
-build:
-	@go build -v
+be-update:
+	@${CMD} GOPROXY=direct go get -u github.com/go-enjin/be
