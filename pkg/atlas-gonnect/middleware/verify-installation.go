@@ -222,21 +222,27 @@ func (h VerifyInstallationMiddleware) ServeHTTP(w http.ResponseWriter, r *http.R
 			w.Header().Add("x-unexpected-symmetric-hook", "true")
 		}
 
-		_, err := h.addon.Store.Get(clientKey.(string))
-		if err != nil {
-			// If err is set here, we serve the normal installation
-			h.next.ServeHTTP(w, r)
-		} else {
-			authHandler := NewAuthenticationMiddleware(h.addon, false)
-			authHandler(http.HandlerFunc(func(writer http.ResponseWriter, req *http.Request) {
-				if req.Context().Value("clientKey") == clientKey {
-					h.next.ServeHTTP(writer, req)
-				} else {
-					util.SendError(w, h.addon, 401, fmt.Sprintf("clientKey in install payload did not match authenticated client; payload: %s, auth: %s", clientKey, r.Context().Value("clientKey")))
-					return
-				}
-			})).ServeHTTP(w, r)
-		}
+		// always normal installation, previous way causes errors during enjin
+		// migration processes, for Go-Enjin purposes, tenants are treated as
+		// ephemeral like an auth session table complimenting some other users
+		// table
+		h.next.ServeHTTP(w, r)
+
+		// _, err := h.addon.Store.Get(clientKey.(string))
+		// if err != nil {
+		// 	// If err is set here, we serve the normal installation
+		// 	h.next.ServeHTTP(w, r)
+		// } else {
+		// 	authHandler := NewAuthenticationMiddleware(h.addon, false)
+		// 	authHandler(http.HandlerFunc(func(writer http.ResponseWriter, req *http.Request) {
+		// 		if req.Context().Value("clientKey") == clientKey {
+		// 			h.next.ServeHTTP(writer, req)
+		// 		} else {
+		// 			util.SendError(w, h.addon, 401, fmt.Sprintf("clientKey in install payload did not match authenticated client; payload: %s, auth: %s", clientKey, r.Context().Value("clientKey")))
+		// 			return
+		// 		}
+		// 	})).ServeHTTP(w, r)
+		// }
 	}
 
 }
