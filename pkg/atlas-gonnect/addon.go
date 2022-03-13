@@ -79,6 +79,6 @@ func NewCustomAddon(config *Profile, currentProfile string, addonDescriptor map[
 		Key:             &key,
 	}
 
-	log.InfoF("Addon successfully initialized!")
+	log.DebugF("addon successfully initialized")
 	return
 }

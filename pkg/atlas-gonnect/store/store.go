@@ -14,7 +14,7 @@ type Store struct {
 }
 
 func New(dbType string, databaseUrl string) (store *Store, err error) {
-	log.InfoF("Initializing Database Connection")
+	log.DebugF("Initializing Database Connection")
 	var dialect gorm.Dialector
 	switch dbType {
 	case "postgres":
@@ -42,7 +42,7 @@ func NewFrom(db *gorm.DB) (store *Store, err error) {
 	store = &Store{
 		Database: db,
 	}
-	log.InfoF("Database Connection initialized")
+	log.DebugF("Database Connection initialized")
 	return
 }
 
