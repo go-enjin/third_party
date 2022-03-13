@@ -130,16 +130,31 @@ func (h AuthenticationMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Reque
 	}
 
 	verifiedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
-		// TODO: We should not check the token header for the method instead of using HMAC by default
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			w.WriteHeader(401)
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+
+		switch token.Header["alg"] {
+		case "none":
+			return nil, fmt.Errorf("alg is none, discard")
+		case "HS256":
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("expected HS256 signing method, actual: %T", token.Method)
+			}
+		case "RS256":
+			// when installing overtop another tenant situation, we're receiving
+			// RS256 when atlas-gonnect is always expecting just HS256, this
+			// problem is alleviated by changes to verify-installation ServeHTTP
+			// where db lookups cause a different installation path
+			if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
+				return nil, fmt.Errorf("expected RS256 signing method, actual: %T", token.Method)
+			}
+		default:
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 
 		return []byte(secret), nil
 	})
 
 	if err != nil {
+		log.ErrorF("JWT Token verification error: %v", err)
 		util.SendError(w, h.addon, 500, "Could not verify JWT Token")
 		return
 	}
