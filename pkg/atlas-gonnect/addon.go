@@ -3,13 +3,13 @@ package gonnect
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"text/template"
 
-	"github.com/go-enjin/third_party/pkg/atlas-gonnect/store"
 	"github.com/go-enjin/be/pkg/log"
+	"github.com/go-enjin/third_party/pkg/atlas-gonnect/store"
 )
 
 type Addon struct {
@@ -61,12 +61,12 @@ func NewCustomAddon(config *Profile, currentProfile string, addonDescriptor map[
 	var ok bool
 	var name, key string
 	if name, ok = addonDescriptor["name"].(string); !ok {
-		err = errors.New("name could not be read from AddonDescriptor")
+		err = fmt.Errorf("name could not be read from AddonDescriptor")
 		return
 	}
 
 	if key, ok = addonDescriptor["key"].(string); !ok {
-		err = errors.New("key could not be read from AddonDescriptor")
+		err = fmt.Errorf("key could not be read from AddonDescriptor")
 		return
 	}
 
