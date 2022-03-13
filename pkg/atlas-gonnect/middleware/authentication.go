@@ -102,12 +102,14 @@ func (h AuthenticationMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Reque
 
 	clientKey := unverifiedClaims["iss"].(string)
 
-	if unverifiedClaims["aud"] != nil && unverifiedClaims["aud"] != "" {
-		// clientKey = unverifiedClaims["aud"].(string)
-		log.DebugF("using aud as clientKey: %v", unverifiedClaims["aud"])
-		// w.WriteHeader(204)
-		// return
-	}
+	// if unverifiedClaims["aud"] != nil && unverifiedClaims["aud"] != "" {
+	// clientKey = unverifiedClaims["aud"].(string)
+	// log.DebugF("using aud as clientKey: %v", unverifiedClaims["aud"])
+	// w.WriteHeader(204)
+	// return
+	// }
+
+	log.DebugF("using clientKey: %v", clientKey)
 
 	queryStringHash := unverifiedClaims["qsh"]
 	if queryStringHash == "" && !h.skipQsh {
