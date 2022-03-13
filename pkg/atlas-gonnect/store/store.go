@@ -77,3 +77,12 @@ func (s *Store) Set(tenant *Tenant) (*Tenant, error) {
 	log.DebugF("Tenant %+v successfully inserted or updated", tenant)
 	return tenant, nil
 }
+
+func (s *Store) Delete(clientKey string) (err error) {
+	tenant := Tenant{}
+	if result := s.Database.Where(&Tenant{ClientKey: clientKey}).First(&tenant); result.Error != nil {
+		return result.Error
+	}
+	log.DebugF("deleting tenant with clientKey %s from database", clientKey)
+	return s.Database.Delete(&tenant).Error
+}
