@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/go-chi/chi/v5 v5.0.7
-	github.com/go-enjin/be v0.0.0-20220312215905-a847b8388eaa
+	github.com/go-enjin/be v0.0.0-20220314000533-cbe91ae18fa1
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/google/go-cmp v0.5.7
 	github.com/patrickmn/go-cache v2.1.0+incompatible
@@ -35,7 +35,7 @@ require (
 	github.com/polds/logrus-papertrail-hook v0.0.0-20180214143432-bcfe7b72c1a4 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2 // indirect
-	golang.org/x/crypto v0.0.0-20220312131142-6068a2e6cfdc // indirect
+	golang.org/x/crypto v0.0.0-20220313003712-b769efc7c000 // indirect
 	golang.org/x/sys v0.0.0-20220310020820-b874c991c1a5 // indirect
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211 // indirect
 	golang.org/x/text v0.3.7 // indirect
