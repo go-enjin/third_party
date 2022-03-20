@@ -1,16 +1,30 @@
 #!/usr/bin/make -f
 
+SHELL = /bin/bash
+
 SUB_DIRS = $(shell find examples features pkg -type d)
 
 define _run_make =
 	for dir in ${SUB_DIRS}; do \
 		if [ -f "$${dir}/Makefile" ]; then \
-			cd $${dir} > /dev/null; \
-			make $(1); \
-			cd - > /dev/null; \
+			if egrep -q "^$(1)\:" "$${dir}/Makefile"; then \
+				echo "# making $(1) in $${dir}"; \
+				cd $${dir} > /dev/null; \
+				make $(1); \
+				cd - > /dev/null; \
+			fi; \
 		fi; \
 	done
 endef
+
+clean:
+	@$(call _run_make,clean)
+
+dist-clean:
+	@$(call _run_make,dist-clean)
+
+build:
+	@$(call _run_make,build)
 
 tidy:
 	@$(call _run_make,tidy)
